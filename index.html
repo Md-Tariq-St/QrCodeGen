@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>QR_Code_Genrater</title>
+    <style>
+    * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif; 
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    background-color: #f0f0f0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: linear-gradient(120deg, #89f7fe, #66a6ff);
+}
+
+.main {
+    border-radius: 13px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 400px;
+    width: 80%;
+    background-color: #fff;
+    position: relative;
+}
+
+h2 {
+   border-left: 5px solid #ff6b6b;
+   border-radius: 5px;
+   padding: 10px;
+   margin-bottom: 10px;
+   font-size: 1.5rem;
+   font-weight: 600;
+   background-image: linear-gradient(to left, #fff, #d3f3ff);
+}
+
+
+
+.main input {
+    padding: 0.75rem;
+    padding-right: 2rem;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    z-index: 1;
+}
+
+input::placeholder {
+    font-size: 1rem;
+}
+
+h2 span {
+    color: red;
+}
+
+ button {
+    padding: 0.75rem;
+    border: none;
+    outline: none;
+    background-color: #3498db;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-top: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+button:hover {
+    background-color: #2980b9;
+    box-shadow: 2px 2px 2px rgba(50, 20, 13, 0);
+}
+
+.qr-box {
+    width: 70%;
+    border-radius: 13px;
+    border: 2px solid;
+    height: 0;
+    padding: 1rem;
+    margin: 0 auto;
+    transition: 0.5s ease;
+    visibility: hidden;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction:column;
+    overflow: hidden;
+    position:relative;
+}
+
+.qr-box img {
+    height: 100%;
+    width: 100%;
+}
+.qr-box a{
+    position:absolute;
+    bottom:0;    
+    text-decoration:none;
+    transition:0.5s;
+}
+.qr-box a:active{
+    text-transform:uppercase;
+    color:green;
+    background-color: #2980b9; 
+    transform: scale(0.95); 
+}
+.qr-active {
+    height: 14em;
+    visibility: visible;
+    opacity: 1;
+}
+
+.empty {
+    animation: shake 0.1s linear 10;
+    border-radius: 2px;
+    border-color: #d01133;
+}
+
+.empty::placeholder {
+    color: darkred;
+}
+
+@keyframes shake {
+    0%, 50% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-2px);
+    }
+    100% {
+        transform: translateX(2px);
+    }
+}
+
+.msg {
+    position: absolute;
+    bottom: 100px;
+    color: red;
+    transition: 0.5s;
+    opacity: 0;
+}
+
+.act-msg {
+    bottom: 80px;
+    opacity: 1;
+}
+
+form {
+    display: flex;
+    align-items: center;
+}
+
+.remove {
+    font-size: 2rem;
+    position: absolute;
+    z-index: 1;
+    right: 1.2rem;
+    cursor: pointer;
+    display: none;
+    transition: 0.3s;
+}
+
+.remove:hover {
+    color: red;
+}
+
+.remove-act {
+    display: block;
+}
+     
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main">
+            <h2>Genrate<span> QR </span>Code</h2>
+            <form>
+            <input type="text" placeholder="Input Text.." id="input"> <p class="remove">×</p>
+            </form>
+            <div class="msg">Please input value & Max 100 alphabet charecter </div>
+            <div class="qr-box">
+               <!--- <img src="" alt="" id="qr-code">-->
+            </div>
+            
+            <button id="btn" onclick='genrateQR()'>Genrate</button>
+        </div>
+    </div>
+    
+    <script>
+        const qrBox = document.querySelector('.qr-box');
+        const input = document.getElementById("input");
+        const QRimg = document.getElementById("qr-code");
+        const msg = document.querySelector(".msg");
+        const remove = document.querySelector(".remove");
+        
+        
+
+                
+        function genrateQR(){
+          if(input.value.length>0 && input.value.length<100){
+              abc();
+              qrBox.classList.add("qr-active");
+          }else{
+              input.classList.add('empty');
+              msg.classList.add('act-msg');
+              setTimeout(()=>{
+                  
+              input.classList.remove('empty');
+              },1000) 
+         }
+        };
+        input.addEventListener("input",()=>{
+            if(!input.value.length>0){
+                qrBox.classList.remove("qr-active");
+                remove.classList.remove("remove-act");
+            }else{
+                msg.classList.remove('act-msg');  
+                remove.classList.add("remove-act");
+            }
+        })
+       remove.addEventListener("click",()=>{
+           input.value="";
+           qrBox.classList.remove("qr-active");
+           remove.classList.remove("remove-act");
+           
+       });
+       
+       async function abc() {
+const url = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${input.value}`;
+    try {
+        const res = await fetch(url);
+        const blob = await res.blob();
+        const imageUrl = URL.createObjectURL(blob);
+        //console.log(imageUrl);
+      //  QRimg.src=imageUrl;
+      qrBox.innerHTML=`<img src="${imageUrl}"> <a href="${imageUrl}" download="${imageUrl}">Download</a>`
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+       
+
+    </script>
+</body>
+</html>
+
